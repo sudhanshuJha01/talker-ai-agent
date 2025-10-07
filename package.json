@@ -9,5 +9,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@langchain/core": "^0.3.78",
+    "@langchain/groq": "^0.2.4",
+    "@langchain/langgraph": "^0.4.9",
+    "dotenv": "^17.2.3"
+  }
 }
