@@ -3,9 +3,12 @@ import readline from "node:readline/promises";
 import { ChatGroq } from "@langchain/groq";
 import { ToolNode } from "@langchain/langgraph/prebuilt"
 import { TavilySearch } from "@langchain/tavily";
+import { MemorySaver } from "@langchain/langgraph";
+
+const checkpointer = new MemorySaver();
 
 import dotenv from 'dotenv'
-import { Agent } from "node:http";
+
 dotenv.config();
 
 /**
@@ -65,7 +68,7 @@ const workflow = new StateGraph(MessagesAnnotation)
   .addConditionalEdges("agent" , shouldContinue)     
   
   
-const app = workflow.compile();
+const app = workflow.compile({ checkpointer });
 
 const main = async () => {
   const r1 = readline.createInterface({
@@ -79,7 +82,7 @@ const main = async () => {
 
     const finalState = await app.invoke({
       messages: [{role:"user" , content:prompt}],
-    });
+    },{ configurable: { thread_id: "1" } });
     const aiResponse = finalState.messages[finalState.messages.length - 1].content
     console.log("AI : ", aiResponse);
   }
